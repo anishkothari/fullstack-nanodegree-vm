@@ -7,3 +7,9 @@
 -- these lines here.
 
 
+CREATE TABLE players (id SERIAL primary key,
+                      name TEXT);
+
+CREATE TABLE matches (id SERIAL primary key,
+                      winner INTEGER REFERENCES players (id),
+                      loser INTEGER REFERENCES players (id));
