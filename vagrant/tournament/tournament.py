@@ -15,7 +15,7 @@ def deleteMatches():
     """Remove all the match records from the database."""
     conn = connect()
     c = conn.cursor()
-    c.execute("DELETE FROM matches;")
+    c.execute("TRUNCATE matches CASCADE;")
     conn.commit()
     conn.close()
 
@@ -24,7 +24,7 @@ def deletePlayers():
     """Remove all the player records from the database."""
     conn = connect()
     c = conn.cursor()
-    c.execute("DELETE FROM players;")
+    c.execute("TRUNCATE players CASCADE;")
     conn.commit()
     conn.close()
 
@@ -68,6 +68,18 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    conn = connect()
+    c = conn.cursor()
+    c.execute('''SELECT players.id, players.name,
+                count(matches.winner) as wins, count(matches.winner) + count(matches2.loser) as total_matches
+                FROM players LEFT JOIN matches on players.id = matches.winner
+                LEFT JOIN matches as matches2 on players.id = matches2.loser
+                GROUP BY players.id, players.name
+                ORDER BY wins DESC;
+        ''')
+    count = c.fetchall()
+    conn.close()
+    return count
 
 
 def reportMatch(winner, loser):
@@ -77,6 +89,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    conn = connect()
+    c = conn.cursor()
+    c. execute("INSERT INTO matches (winner, loser) VALUES (%s, %s);", (winner, loser,))
+    conn.commit()
+    conn.close()
 
 
 def swissPairings():
