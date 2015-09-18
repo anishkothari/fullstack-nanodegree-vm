@@ -10,23 +10,21 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def simpleQuery(query):
+    conn = connect()
+    c = conn.cursor()
+    c.execute(query)
+    conn.commit()
+    conn.close()
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute("TRUNCATE matches CASCADE;")
-    conn.commit()
-    conn.close()
+    simpleQuery("TRUNCATE matches CASCADE;")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute("TRUNCATE players CASCADE;")
-    conn.commit()
-    conn.close()
+    simpleQuery("TRUNCATE players CASCADE;")
 
 
 def countPlayers():
@@ -70,13 +68,7 @@ def playerStandings():
     """
     conn = connect()
     c = conn.cursor()
-    c.execute('''SELECT players.id, players.name,
-                count(matches.winner) as wins, count(matches.winner) + count(matches2.loser) as total_matches
-                FROM players LEFT JOIN matches on players.id = matches.winner
-                LEFT JOIN matches as matches2 on players.id = matches2.loser
-                GROUP BY players.id, players.name
-                ORDER BY wins DESC;
-        ''')
+    c.execute("SELECT * from standings;")
     count = c.fetchall()
     conn.close()
     return count
@@ -91,7 +83,7 @@ def reportMatch(winner, loser):
     """
     conn = connect()
     c = conn.cursor()
-    c. execute("INSERT INTO matches (winner, loser) VALUES (%s, %s);", (winner, loser,))
+    c.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s);", (winner, loser,))
     conn.commit()
     conn.close()
 
@@ -111,3 +103,14 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT id, name from standings;")
+    standings = c.fetchall()
+    conn.close()
+
+    pairs = []
+    total_players = len(standings)
+    for i in range(0, total_players, 2):
+        pairs.append(standings[i] + standings[i+1])
+    return pairs
