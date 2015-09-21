@@ -3,18 +3,21 @@
 -- Put your SQL 'create table' statements in this file; also 'create view'
 -- statements if you choose to use it.
 --
--- You can write comments in this file by starting them with two dashes, like
--- these lines here.
+-- Create and connect to the database
+
 CREATE DATABASE tournament;
 
 \c tournament;
 
+-- Create tables in the database
 CREATE TABLE players (id SERIAL primary key,
                       name TEXT);
 
 CREATE TABLE matches (id SERIAL primary key,
                       winner INTEGER REFERENCES players (id),
                       loser INTEGER REFERENCES players (id));
+
+-- Create a standings view for the Swiss-system tournament
 
 CREATE VIEW standings AS
 SELECT players.id, players.name, count(matches.winner) as wins,

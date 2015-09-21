@@ -10,12 +10,14 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+
 def simpleTransaction(query):
     conn = connect()
     c = conn.cursor()
     c.execute(query)
     conn.commit()
     conn.close()
+
 
 def simpleInsert(query, arg):
     conn = connect()
@@ -24,12 +26,14 @@ def simpleInsert(query, arg):
     conn.commit()
     conn.close()
 
+
 def multipleInsert(query, arg1, arg2):
     conn = connect()
     c = conn.cursor()
     c.execute(query, (arg1, arg2,))
     conn.commit()
     conn.close()
+
 
 def singleResultQuery(query):
     conn = connect()
@@ -40,6 +44,7 @@ def singleResultQuery(query):
     conn.close()
     return result[0]
 
+
 def multipleResultQuery(query):
     conn = connect()
     c = conn.cursor()
@@ -48,6 +53,7 @@ def multipleResultQuery(query):
     c.close()
     conn.close()
     return result
+
 
 def deleteMatches():
     """Remove all the match records from the database."""
@@ -117,6 +123,9 @@ def swissPairings():
         name2: the second player's name
     """
     standings = multipleResultQuery("SELECT id, name from standings;")
+
+    """Determining the matches to be played according to players' rankings in the standings view.
+    Iterating through the standings view 2 players at a time and returning their information."""
 
     pairs = []
     total_players = len(standings)
