@@ -3,8 +3,8 @@
 -- Put your SQL 'create table' statements in this file; also 'create view'
 -- statements if you choose to use it.
 --
--- Create and connect to the database
-
+-- Drop the database if it already exists - otherwise create and connect to the database
+DROP DATABASE IF EXISTS tournament;
 CREATE DATABASE tournament;
 
 \c tournament;
