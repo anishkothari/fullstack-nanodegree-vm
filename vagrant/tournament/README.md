@@ -1,6 +1,6 @@
 ###Project 2 of Udacity's Full-Stack Nanodegree
 
-This project runs on a Vagrant VM (virtual machine). The goal of this project is to create a basic implementation of a Swiss-style tournament in a PostgreSQL database. There is a pre-written test suite, so the student must use Python and SQL that make the tests pass.
+This project runs on a Vagrant VM (virtual machine). The goal of this project is to create a basic implementation of a Swiss-style tournament in a PostgreSQL database. There is a pre-written test suite, so the student must use Python and SQL to make the tests pass.
 
 ###Instructions
 Clone this project locally and navigate to the `vagrant/` directory.  
